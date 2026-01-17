@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Dashboard — Krishi</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header"><div class="brand"><div class="logo">FA</div><div><div class="title">FarmerAssist</div><div class="subtitle">Dashboard</div></div></div>
+    <div style="display:flex;gap:10px;align-items:center"><div class="muted" id="userBox">User</div><button class="btn" id="btnSpeak">🔊</button><button class="btn ghost" id="btnLogout">Logout</button></div></header>
+
+    <main>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <h3 id="dashHeader">Hello Farmer</h3>
+            <div id="dashSub" class="muted">Personalised guidance</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <input id="searchBox" class="input" placeholder="Search schemes or guidance..." style="max-width:320px">
+          </div>
+        </div>
+
+        <div class="layout" style="margin-top:12px">
+          <aside>
+            <div class="card">
+              <h4>Your profile</h4>
+              <div id="profileSummary" class="muted">Loading...</div>
+              <div style="margin-top:8px"><button class="btn" onclick="location.href='profile.html'">Edit Profile</button></div>
+            </div>
+
+            <div class="card" style="margin-top:12px">
+              <h4>Yojna Hub</h4>
+              <div class="yojna-grid">
+                <div class="yojna"><strong>PM-KISAN</strong><div class="muted">Income support — <a href="https://pmkisan.gov.in/" target="_blank">link</a></div></div>
+                <div class="yojna"><strong>Soil Health Card</strong><div class="muted">Soil testing — <a href="https://soilhealth.dac.gov.in/" target="_blank">link</a></div></div>
+                <div class="yojna"><strong>PM-KUSUM</strong><div class="muted">Solar pumps — <a href="https://pmkusum.mnre.gov.in/" target="_blank">link</a></div></div>
+                <div class="yojna"><strong>Micro Irrigation Subsidy</strong><div class="muted">Check state portal</div></div>
+              </div>
+            </div>
+          </aside>
+
+          <section>
+            <div class="card">
+              <h4>Fertiliser Guide</h4>
+              <pre id="fertText" class="muted" style="white-space:pre-wrap">Set profile to get personalised fertiliser guidance</pre>
+            </div>
+
+            <div class="card" style="margin-top:12px">
+              <h4>Biofuel from waste</h4>
+              <pre id="bioText" class="muted" style="white-space:pre-wrap">Set profile to see biofuel steps</pre>
+              <div id="bioEstimate" style="margin-top:10px" class="muted"></div>
+            </div>
+
+            <div class="card" style="margin-top:12px">
+              <h4>Safety & Guide</h4>
+              <div class="muted">Wear PPE, use certified digesters, avoid open burning. For hardware subsidies contact local agri office.</div>
+            </div>
+          </section>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">FarmerAssist — Green theme • Mobile friendly</footer>
+  </div>
+
+  <script type="module">
+    import { PHRASES, speak, generateFertiliserText, generateBioText, npkForCrop, showToast } from './app.js';
+
+    function loadProfileToDash(){
+      const p = JSON.parse(localStorage.getItem('fa_profile') || 'null');
+      const user = localStorage.getItem('fa_user') || 'Guest';
+      document.getElementById('userBox').textContent = user;
+      if(!p){ document.getElementById('profileSummary').textContent = 'No profile — please setup'; return; }
+      document.getElementById('profileSummary').innerHTML = `<strong>${p.crop}</strong> — ${p.location}<div class="muted">Soil: ${p.soil} • Irrigation: ${p.irrigation}</div>`;
+      document.getElementById('fertText').textContent = generateFertiliserText(p);
+      document.getElementById('bioText').textContent = generateBioText(p);
+      document.getElementById('bioEstimate').textContent = `Production: ${p.production} → Indicative biofuel yield depends on method.`;
+    }
+
+    document.getElementById('btnSpeak').addEventListener('click', ()=>{
+      const t = document.getElementById('fertText').textContent + '\n' + document.getElementById('bioText').textContent;
+      if(!t.trim()) showToast('No guidance to speak'); else speak(t);
+    });
+
+    document.getElementById('btnLogout').addEventListener('click', ()=>{
+      localStorage.removeItem('fa_user'); localStorage.removeItem('fa_profile'); localStorage.removeItem('fa_lang'); localStorage.removeItem('fa_guest');
+      showToast('Logged out');
+      setTimeout(()=> location.href='welcome.html', 700);
+    });
+
+    document.getElementById('searchBox').addEventListener('input', (e)=>{
+      const q = e.target.value.toLowerCase();
+      // basic filter: show/hide yojna cards based on query
+      document.querySelectorAll('.yojna').forEach(c=>{
+        c.style.display = c.textContent.toLowerCase().includes(q) ? 'block' : 'none';
+      });
+    });
+
+    // initial load
+    (function init(){
+      loadProfileToDash();
+      const lang = localStorage.getItem('fa_lang') || 'en';
+      const welcome = (PHRASES[lang] && PHRASES[lang].welcome) ? PHRASES[lang].welcome : PHRASES['en'].welcome;
+      document.getElementById('dashHeader').textContent = `${welcome} ${localStorage.getItem('fa_user') || ''}`;
+    })();
+  </script>
+</body>
+</html>

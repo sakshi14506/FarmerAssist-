@@ -1,0 +1,310 @@
+/* ===================== Root Variables ===================== */
+:root {
+  --green-1: #e8fff3;
+  --green-2: #f2fff8;
+  --accent: #158a4a;
+  --accent-2: #2bd07a;
+  --warm: #ffbf69;
+  --muted: #546b60;
+  --card-radius: 14px;
+  --max-width: 980px;
+}
+
+/* ===================== Base Styles ===================== */
+* {
+  box-sizing: border-box;
+  font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+  -webkit-font-smoothing: antialiased;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  background: linear-gradient(180deg, var(--green-1), var(--green-2));
+  color: #083522;
+}
+
+.container {
+  max-width: var(--max-width);
+  margin: 18px auto;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.logo {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--card-radius);
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  color: white;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 20px;
+  box-shadow: 0 10px 30px rgba(17, 85, 51, 0.12);
+}
+
+.logo img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+.title {
+  font-weight: 800;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  padding: 16px;
+  border-radius: var(--card-radius);
+  box-shadow: 0 12px 30px rgba(7, 37, 22, 0.06);
+}
+
+.center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 70vh;
+  padding: 12px;
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* ===================== Inputs ===================== */
+.input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 2px solid #c7d5c1;
+  margin-top: 8px;
+  background: #fff;
+  outline: none;
+  transition: all 0.2s ease-in-out;
+}
+
+.input:hover {
+  transform: scale(1.03);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+  border-color: var(--accent);
+}
+
+.input:focus {
+  border-color: var(--accent);
+  transform: scale(1.04);
+  box-shadow: 0 6px 14px rgba(26, 143, 42, 0.25);
+}
+
+/* ===================== Buttons ===================== */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 22px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.btn.primary {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: white;
+  box-shadow: 0 4px 10px rgba(26, 143, 42, 0.3);
+}
+
+.btn.ghost {
+  background: #fff;
+  border: 2px solid var(--accent);
+  color: var(--accent);
+  box-shadow: 0 4px 10px rgba(26, 143, 42, 0.2);
+}
+
+.btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 10px 26px rgba(0, 0, 0, 0.22);
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+/* Pop effect variant */
+.btn.pop {
+  position: relative;
+  padding: 12px 28px;
+  font-size: 1rem;
+  border-radius: 12px;
+  z-index: 1;
+}
+
+.btn.pop::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 12px;
+  z-index: -1;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.btn.pop:hover::before {
+  transform: scale(1.05);
+  opacity: 0.25;
+}
+
+.btn.pop:active {
+  transform: scale(1.1);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* ===================== Pills & Layout ===================== */
+.lang-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.pill {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: white;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+}
+
+.pill.active {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+  background: linear-gradient(90deg, var(--warm), #ffd87a);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 16px;
+  margin-top: 12px;
+}
+
+.waste-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.waste-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border-radius: 10px;
+  background: linear-gradient(180deg, #fff, #f7fff7);
+  cursor: pointer;
+  border: 1px solid rgba(12, 30, 12, 0.03);
+}
+
+.waste-item img {
+  width: 64px;
+  height: 48px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.yojna-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.yojna {
+  padding: 10px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #fffef2, #fff);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* ===================== Toast & Footer ===================== */
+.toast {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  color: white;
+  box-shadow: 0 8px 26px rgba(27, 176, 122, 0.14);
+}
+
+.welcome-hero {
+  width: 100%;
+  height: 70vh;
+  border-radius: 12px;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: white;
+  text-shadow: 0 8px 22px rgba(0, 0, 0, 0.35);
+}
+
+.welcome-cta {
+  margin-top: 16px;
+}
+
+.footer {
+  margin-top: 18px;
+  text-align: center;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* ===================== Password Toggle & Errors ===================== */
+.password-box {
+  position: relative;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: #0077aa;
+}
+
+.error {
+  color: red;
+  font-size: 0.85rem;
+  display: none;
+  margin-top: 4px;
+}
+  

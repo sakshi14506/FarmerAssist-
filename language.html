@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Login — Krishi</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="logo">
+          <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="logo"/>
+        </div>
+        <div>
+          <div class="title">FarmerAssist</div>
+          <div class="subtitle">Login</div>
+        </div>
+      </div>
+    </header>
+
+    <main class="center">
+      <div class="card" style="max-width:820px;display:flex;gap:18px;align-items:center">
+        <div style="flex:1">
+          <h2>Login</h2>
+          <p class="muted">Enter your name to continue. Email optional.</p>
+
+          <label>Name</label>
+          <input id="name" class="input" placeholder="e.g. Ramesh" required />
+
+          <label style="margin-top:8px">Email (Optional)</label>
+          <input id="email" class="input" placeholder="you@example.com" />
+
+          <label style="margin-top:8px">Password</label>
+          <div class="password-box">
+            <input id="password" type="password" class="input" placeholder="password" required />
+            <button type="button" class="toggle-password" onclick="togglePass('password')">Show</button>
+          </div>
+
+          <label style="margin-top:8px">Confirm Password</label>
+          <div class="password-box">
+            <input id="confirmPassword" type="password" class="input" placeholder="confirm password" required />
+            <button type="button" class="toggle-password" onclick="togglePass('confirmPassword')">Show</button>
+          </div>
+
+          <span id="errorMsg" class="error">❌ Passwords do not match!</span>
+
+          <div style="display:flex;gap:10px;margin-top:12px">
+            <button id="btnLogin" class="btn primary">Login</button>
+            <button id="btnGuest" class="btn ghost">Continue as Guest</button>
+          </div>
+        </div>
+
+        <div style="width:220px;text-align:center">
+          <div style="width:120px;height:120px;border-radius:99px;background:white;display:grid;place-items:center;margin:0 auto;box-shadow:0 10px 30px rgba(0,0,0,0.06)">
+            <img src="https://cdn-icons-png.flaticon.com/512/1995/1995574.png" width="86" alt="farmer">
+          </div>
+          <p class="muted" style="margin-top:12px">A friendly wave awaits 👋</p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">After login you'll be greeted and moved to language setup</footer>
+  </div>
+
+  <script type="module">
+    import { PHRASES, speak, showToast } from './app.js';
+
+    function togglePass(id){
+      const input = document.getElementById(id);
+      input.type = input.type === "password" ? "text" : "password";
+    }
+
+    document.getElementById('btnLogin').addEventListener('click', ()=>{
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const pass = document.getElementById('password').value.trim();
+      const cpass = document.getElementById('confirmPassword').value.trim();
+      const err = document.getElementById('errorMsg');
+
+      if(!name){ alert('Please enter your name'); return; }
+      if(pass !== cpass){
+        err.style.display = "block";
+        return;
+      } else {
+        err.style.display = "none";
+      }
+
+      localStorage.setItem('fa_user', name);
+      if(email) localStorage.setItem('fa_email', email);
+
+      const lang = localStorage.getItem('fa_lang') || 'en';
+      const nam = PHRASES[lang]?.namaste || PHRASES['en'].namaste;
+
+      showToast(`${nam} ${name}`);
+      speak(`${nam} ${name}`);
+
+      setTimeout(()=> location.href = 'profile.html', 350);
+    });
+
+    document.getElementById('btnGuest').addEventListener('click', ()=>{
+      localStorage.setItem('fa_guest','true');
+      localStorage.setItem('fa_user','Guest');
+      showToast('Continuing as Guest');
+      speak('Continuing as Guest');
+      setTimeout(()=> location.href = 'profile.html', 300);
+    });
+  </script>
+
+</body>
+</html>

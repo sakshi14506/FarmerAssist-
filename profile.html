@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Profile — Krishi</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="logo">FA</div>
+        <div><div class="title" id="hdrTitle">Profile Setup</div>
+        <div class="subtitle" id="hdrSub">Enter farm info</div>
+      </div>
+    </div>
+    <div class="muted">User: <strong id="uTop">-</strong></div>
+  </header>
+
+    <main>
+      <div class="card" style="max-width:1100px;margin:18px auto">
+        <div style="display:grid;grid-template-columns:1fr 360px;gap:12px">
+          <div>
+            <label id="lblLocation">Location</label>
+            <input id="location" class="input" placeholder="Village / District or use auto-detect" />
+            <button class="btn ghost" id="btnGeo" style="margin-top:8px">Auto-detect location</button>
+
+            <label id="lblCrop" style="margin-top:8px">Crop type</label>
+            <input id="crop" class="input" placeholder="e.g. Paddy, Wheat" />
+
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <div style="flex:1">
+                <label id="lblSoil">Soil type</label>
+                <select id="soil" class="input"><option value="loamy">Loamy</option><option value="sandy">Sandy</option><option value="clay">Clay</option><option value="silty">Silty</option></select>
+              </div>
+              <div style="flex:1">
+                <label id="lblIrr">Irrigation</label>
+                <select id="irrigation" class="input"><option value="rainfed">Rainfed</option><option value="drip">Drip</option><option value="flood">Flood</option><option value="sprinkler">Sprinkler</option></select>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:8px">
+              <input id="price" class="input" placeholder="Avg price (₹/quintal)" />
+              <input id="production" class="input" placeholder="Production (quintals/year)" />
+            </div>
+
+            <div style="display:flex;justify-content:space-between;gap:8px;margin-top:12px">
+              <button class="btn" onclick="location.href='language.html'">Back</button>
+              <div style="display:flex;gap:8px">
+                <button class="btn ghost" id="btnSave">Save</button>
+                <button class="btn primary" id="btnSaveContinue">Save & Continue</button>
+              </div>
+            </div>
+          </div>
+
+          <aside>
+            <div class="card yojna">
+              <h4>Tips</h4>
+              <div class="muted">Keep dry waste separate. Cow dung is a binder for briquettes. Use compost for soil health.</div>
+            </div>
+
+            <div class="card" style="margin-top:12px">
+              <h4>Waste Quick Pick</h4>
+              <div class="waste-grid" style="margin-top:8px">
+                <div class="waste-item" data-waste="straw"><img src="dashboard image 1.jpg"><div><strong>Straw</strong><div class="muted">Wheat / Rice</div></div></div>
+                <div class="waste-item" data-waste="husks"><img src="dashboard image 2.jpg"><div><strong>Husks</strong><div class="muted">Paddy</div></div></div>
+                <div class="waste-item" data-waste="cane"><img src="dashboard image 3.jpg"><div><strong>Cane</strong><div class="muted">Sugarcane</div></div></div>
+                <div class="waste-item" data-waste="stalks"><img src="dashboard image 4.jpg"><div><strong>Stalks</strong><div class="muted">Maize</div></div></div>
+              </div>
+              <div id="wStage" style="margin-top:10px" class="muted">Tap a waste to preview steps</div>
+            </div>
+
+            <div class="card" style="margin-top:12px">
+              <h4>Yojna Links</h4>
+              <div class="yojna-grid">
+                <div class="yojna"><strong>PM-KISAN</strong><div class="muted"><a href="https://pmkisan.gov.in/" target="_blank">Official</a></div></div>
+                <div class="yojna"><strong>Soil Health Card</strong><div class="muted"><a href="https://soilhealth.dac.gov.in/" target="_blank">Official</a></div></div>
+                <div class="yojna"><strong>PM-KUSUM</strong><div class="muted"><a href="https://pmkusum.mnre.gov.in/" target="_blank">Official</a></div></div>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </main>
+
+    <footer class="footer">You can change language anytime from the language screen</footer>
+  </div>
+
+  <script type="module">
+    import { PHRASES, speak, showToast, generateFertiliserText, generateBioText } from './app.js';
+
+    // Basic translations for labels
+    function applyLabels(){
+      const lang = localStorage.getItem('fa_lang') || 'en';
+      const p = PHRASES[lang] || PHRASES['en'];
+      document.getElementById('hdrTitle').textContent = p.welcome || 'Profile Setup';
+      document.getElementById('hdrSub').textContent = p.chooseLang || 'Enter farm information';
+      document.getElementById('lblLocation').textContent = (lang==='hi'?'स्थान (गाँव/जिला)':'Location (village/district)');
+      document.getElementById('lblCrop').textContent = (lang==='hi'?'फसल का प्रकार':'Crop type');
+      document.getElementById('lblSoil').textContent = (lang==='hi'?'मिट्टी का प्रकार':'Soil type');
+      document.getElementById('lblIrr').textContent = (lang==='hi'?'सिंचाई पद्धति':'Irrigation method');
+      document.getElementById('uTop').textContent = localStorage.getItem('fa_user') || 'Guest';
+    }
+    applyLabels();
+
+    // load saved profile to UI
+    (function load(){
+      const p = JSON.parse(localStorage.getItem('fa_profile')||'null');
+      if(p){
+        document.getElementById('location').value = p.location || '';
+        document.getElementById('crop').value = p.crop || '';
+        document.getElementById('soil').value = p.soil || 'loamy';
+        document.getElementById('irrigation').value = p.irrigation || 'rainfed';
+        document.getElementById('price').value = p.price || '';
+        document.getElementById('production').value = p.production || '';
+      }
+    })();
+
+    document.getElementById('btnGeo').addEventListener('click', ()=>{
+      if(!navigator.geolocation){ alert('Geolocation not supported'); return; }
+      navigator.geolocation.getCurrentPosition(async (pos)=>{
+        const lat = pos.coords.latitude, lon = pos.coords.longitude;
+        // reverse geocode using free API (nominatim) — might be rate-limited
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`);
+          const j = await res.json();
+          const place = (j.address && (j.address.village || j.address.town || j.address.county || j.address.state)) || `${lat.toFixed(2)},${lon.toFixed(2)}`;
+          document.getElementById('location').value = place;
+          showToast('Location detected');
+        } catch(e){ showToast('Auto-location failed'); }
+      }, (err)=>{ alert('Location denied or failed'); }, {timeout:10000});
+    });
+
+    // waste preview
+    document.querySelectorAll('.waste-item').forEach(it=>{
+      it.addEventListener('click', ()=>{
+        const w = it.dataset.waste; const out = document.getElementById('wStage');
+        if(w==='straw') out.textContent = 'Straw — Chop, dry, mix with 10-15% binder (cow dung), press into briquettes & dry.';
+        if(w==='husks') out.textContent = 'Husks — Grind & press or create biochar via controlled pyrolysis.';
+        if(w==='cane') out.textContent = 'Sugarcane trash — Shred & compost or press for briquettes; good gas yield.';
+        if(w==='stalks') out.textContent = 'Stalks — Shred & press or pyrolyse for biochar + fuel.';
+        speak(out.textContent);
+      });
+    });
+
+    async function save(goNext=false){
+      const profile = {
+        location: document.getElementById('location').value || '—',
+        crop: document.getElementById('crop').value || 'unknown',
+        soil: document.getElementById('soil').value,
+        irrigation: document.getElementById('irrigation').value,
+        price: document.getElementById('price').value || '—',
+        production: document.getElementById('production').value || '—'
+      };
+      localStorage.setItem('fa_profile', JSON.stringify(profile));
+      const lang = localStorage.getItem('fa_lang') || 'en';
+      const msg = (PHRASES[lang] && PHRASES[lang].profileUpdated) ? PHRASES[lang].profileUpdated : PHRASES['en'].profileUpdated;
+      showToast(msg);
+      speak(msg);
+      if(goNext) setTimeout(()=> location.href='dashboard.html', 700);
+    }
+
+    document.getElementById('btnSave').addEventListener('click', ()=> save(false));
+    document.getElementById('btnSaveContinue').addEventListener('click', ()=> save(true));
+  </script>
+</body>
+</html>
